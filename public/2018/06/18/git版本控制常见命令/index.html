@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang=>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="签名：我不懂得怎样形容自己，但我持续尝试，让自己日渐清晰。">
+  <meta name="keywords" content="">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+    
+  <title>git常见命令 | tian的博客</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>tian的博客</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+        <section class="content markdown-body">
+          <h1>git常见命令</h1>
+          <div class='post-meta'>
+            <i class="fa fa-calendar" aria-hidden="true"></i> <time>2018/06/18</time>
+            
+            
+          </div>
+          <h4 id="git版本"><a href="#git版本" class="headerlink" title="git版本"></a>git版本</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">打开命令行工具 git bush</span><br><span class="line"><span class="comment">// 查看git版本</span></span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
+<h4 id="repository"><a href="#repository" class="headerlink" title="repository"></a>repository</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化仓库  创建的文件夹中有一个隐藏的.git文件夹，就是仓库</span></span><br><span class="line">git init</span><br><span class="line">查看状态</span><br><span class="line">git status</span><br><span class="line"><span class="comment">// 提交所有</span></span><br><span class="line">git add --all  或者 git add .</span><br><span class="line"><span class="comment">// 提交单个</span></span><br><span class="line">git add 文件名 提交一个</span><br><span class="line"><span class="comment">// 备注信息</span></span><br><span class="line">git commit -m <span class="string">":tada: Initial commit"</span></span><br><span class="line"><span class="comment">// 查看日志</span></span><br><span class="line">git log 或者 git log--pretty=online</span><br></pre></td></tr></table></figure>
+<p><code>git status</code>命令用来 查看文件的状态 如果是红色的代表在工作区，使用了git add . 文件变成了绿色说明在暂存区 </p>
+<p>使用了 <code>git commit -m &quot;&quot;</code> 在查看状态 <code>git status</code> 显示的是 <code>nothing to commit,working treeclean</code> 说明暂存区已经添加到了历史记录中，暂存区已经干净了。 </p>
+<h4 id="版本回退"><a href="#版本回退" class="headerlink" title="版本回退"></a>版本回退</h4><ul>
+<li>把版本回退到前面的版本，当前版本HEAD上一个版本HEAD^  </li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard HEAD^</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看自己的每一次命令的记录    如果回退到某一个版本之后又后悔了，n那么可以再回到某一次提交，这时可以查看自己的写过的命令</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reflog</span><br></pre></td></tr></table></figure>
+<ul>
+<li>回到某一次的提交 回到某一次提交就要找到某一次提交的id，使用git reflog可以查看自己的命令id </li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard id号</span><br></pre></td></tr></table></figure>
+<h4 id="添加远程库"><a href="#添加远程库" class="headerlink" title="添加远程库"></a>添加远程库</h4><p>拉代码</p>
+<p>新建一个文件家用来存放 cd 进入该文件，输入命令</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git clone 后面附上https复制的地址</span><br><span class="line"><span class="comment">// 加限制</span></span><br><span class="line"><span class="comment">// (-- git clone --depth=1 下载最新的历史记录，设限制)</span></span><br></pre></td></tr></table></figure>
+<h4 id="创建分支"><a href="#创建分支" class="headerlink" title="创建分支"></a>创建分支</h4><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">创建分支 github flow</span><br><span class="line"><span class="symbol">git</span> <span class="keyword">branch </span>+分支名称</span><br><span class="line"><span class="symbol">git</span> <span class="keyword">branch </span>查看分支状态</span><br><span class="line"><span class="symbol">git</span> checkout +分支名称 切换分支</span><br></pre></td></tr></table></figure>
+<p>####push到线上</p>
+<ul>
+<li>在git上创建一个远程仓库</li>
+<li>git push + 复制地址</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// push到远程仓库</span></span><br><span class="line">git remote add origin https:<span class="comment">//github.com/你的GitHub用户名/admin-vue.git</span></span><br><span class="line"></span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push --set-upstream origin +分支名称</span><br></pre></td></tr></table></figure>
+
+        </section>
+    </article>
+    
+        <!-- disqus 评论框 start -->
+        <div class="comment">
+            <div id="disqus_thread" class="disqus-thread">
+              <i>Loading comments box needs to over the wall</i>
+            </div>
+        </div>
+        <!-- disqus 评论框 end -->
+    
+        
+  </div>
+  <aside>
+    
+    <div class="toc-container">
+        <h1>目录</h1>
+        <div class="content">
+            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#git版本"><span class="toc-number">1.</span> <span class="toc-text">git版本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#repository"><span class="toc-number">2.</span> <span class="toc-text">repository</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本回退"><span class="toc-number">3.</span> <span class="toc-text">版本回退</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#添加远程库"><span class="toc-number">4.</span> <span class="toc-text">添加远程库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#创建分支"><span class="toc-number">5.</span> <span class="toc-text">创建分支</span></a></li></ol>
+        </div>
+    </div>
+    
+  </aside>
+</main>
+
+<!-- disqus 公共JS代码 -->
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = "lewis-blog";
+  var disqus_identifier = "https://zhaotbj.github.io/2018/06/18/git版本控制常见命令/";
+  var disqus_url = "https://zhaotbj.github.io/2018/06/18/git版本控制常见命令/";
+
+  isAgent(getDisqus)
+
+  // determine user agent in China
+  function isAgent(cb) {
+    var url = '//graph.facebook.com/feed?callback=h';
+    var xhr = new XMLHttpRequest();
+    var called = false;
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+      called = true;
+      cb(true);
+      }
+    };
+    xhr.send();
+    // timeout 1s, this facebook API is very fast.
+    setTimeout(function() {
+      if (!called) {
+      xhr.abort();
+      cb(false)
+      }
+    }, 1000);
+  }
+
+  function getDisqus(isAgent) {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; 
+    dsq.async = true
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq)
+  }
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+  <footer>
+  <div class="copyright">
+    <div>
+      &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>&nbsp
+    </div>
+    <div>
+      Theme by <a href="https://github.com/lewis-geek/hexo-theme-Aath" target="_blank">Aath</a>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="/lib/in-view.min.js"></script>
+<script src="/lib/lodash.min.js"></script>
+<script>
+  var isDown = true
+  var oldY = 0
+  inView.offset(50)
+
+  document.body.addEventListener('touchstart', function(){});
+  
+  window.addEventListener('scroll', _.throttle(e => {
+    var currentY = window.scrollY
+    if((oldY - currentY) < 0) {
+      isDown = true
+    } else {
+      isDown = false
+    }
+    oldY = currentY
+  }, 250))
+
+  $("article img").each(function() {
+      var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+      $(this).wrapAll(strA);
+  });
+
+  $('.toc-link').each(function() {
+      var href = $(this).attr("href");
+      
+      inView(href).on('exit', () => {
+        if (isDown) {
+          handleActive(href)
+        }
+      })
+
+      inView(href).on('enter', () => {
+        if (!isDown) {
+          handleActive(href)
+        }
+      })
+
+      this.onclick = function(e) {
+        var pos = $(href).offset().top - 10;
+        $("html,body").animate({scrollTop: pos}, 300);
+        setTimeout(() => {
+          handleActive(href)
+        }, 350)
+        return false
+      }
+  })
+
+  function handleActive(href) {
+    document.querySelectorAll('.toc-link').forEach(elm => {
+      elm.classList.remove('active')
+    })
+    document.querySelector(".toc [href='"+ href +"']").classList.add('active')
+  }
+</script>
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+</body>
+</html>
