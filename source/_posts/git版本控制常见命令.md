@@ -73,7 +73,7 @@ git branch 查看分支状态
 git checkout +分支名称 切换分支
 ```
 
-####push到线上
+#### push到线上
 
 - 在git上创建一个远程仓库
 - git push + 复制地址

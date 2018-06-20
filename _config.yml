@@ -5,7 +5,7 @@
 # Site
 title: tian的博客
 subtitle:
-description: 签名：我不懂得怎样形容自己，但我持续尝试，让自己日渐清晰。
+description:
 author: John Doe
 language:
 timezone:
@@ -78,7 +78,7 @@ disqus_shortname: lewis-blog
 
 search: true
 avatar: http://olnzpdi2u.bkt.clouddn.com/avatar.jpg
-aside-description: aside-description
+aside-description: 我不懂得怎样形容自己，但我持续尝试，让自己日渐清晰。
 links:
   lewis: http://lewis.suclub.cn
   zhihu: https://www.zhihu.com/
