@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang=>
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  
+    <link rel="icon" href="/favicon.ico">
+  
+    
+  <title>从零开始搭建vue项目 请求拦截器 响应拦截器 | tian的博客</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class='logo' href="/">
+      <span>tian的博客</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+</header>
+
+  <main id='post'>
+  <div class="content">
+    <article>
+        <section class="content markdown-body">
+          <h1>从零开始搭建vue项目 请求拦截器 响应拦截器</h1>
+          <div class='post-meta'>
+            <i class="fa fa-calendar" aria-hidden="true"></i> <time>2018/06/24</time>
+            
+            
+          </div>
+          <h3 id="1-安装vue-cli，基于webpack模版"><a href="#1-安装vue-cli，基于webpack模版" class="headerlink" title="1.安装vue cli，基于webpack模版"></a>1.安装vue cli，基于webpack模版</h3><p>基于webpack模版初始化一个名称为admin的项目<br>vue init webpack admin-vue<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install -g vue-cli</span><br><span class="line">vue init webpack my-project</span><br><span class="line">cd my-project</span><br><span class="line">npm install</span><br><span class="line">npm run dev</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── build webpack	打包相关的配置文件目录</span><br><span class="line">├── config webpack	打包相关的配置文件目录</span><br><span class="line">├── node_modules	第三方依赖包 千万不要动它</span><br><span class="line">├── src	项目源码</span><br><span class="line">│   ├── assets	存储资源，例如 css、 img、 fonts</span><br><span class="line">│   ├── common	存储一些公共的业务组件</span><br><span class="line">│   ├── components	存储所有组件</span><br><span class="line">│   ├── router	路由</span><br><span class="line">        └──  index<span class="selector-class">.js</span>	路由配置文件</span><br><span class="line">│   ├── App<span class="selector-class">.vue</span>  单页面应用程序的根组件</span><br><span class="line">│   └── main<span class="selector-class">.js</span>  开机键，负责把根组件替换到根节点</span><br><span class="line">├── static  可以放一些静态资源</span><br><span class="line">│   └── .gitkeep</span><br><span class="line">├── <span class="selector-class">.babelrc</span>  es6转es5配置文件，给 babel 编译器用的</span><br><span class="line">├── <span class="selector-class">.editorconfig</span> </span><br><span class="line">├── <span class="selector-class">.eslintignore</span>  eslint配置文件</span><br><span class="line">├── <span class="selector-class">.eslintrc</span><span class="selector-class">.js</span>  eslint配置文件</span><br><span class="line">├── <span class="selector-class">.gitignore</span>  git忽略上传文件</span><br><span class="line">├── index<span class="selector-class">.html</span>  单页面引用程序的单页</span><br><span class="line">├── package<span class="selector-class">.json</span> 项目依赖项等信息</span><br><span class="line">├── package-lock.json</span><br><span class="line">├── <span class="selector-class">.postcssrc</span><span class="selector-class">.js</span>  postcss类似于 less、sass 预处理器</span><br><span class="line">└── README.md</span><br></pre></td></tr></table></figure>
+<h3 id="2-导入ElementUI"><a href="#2-导入ElementUI" class="headerlink" title="2.导入ElementUI"></a>2.导入ElementUI</h3><p><a href="http://element.eleme.io/#/zh-CN/component/installation" target="_blank" rel="noopener">http://element.eleme.io/#/zh-CN/component/installation</a></p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">安装 依赖 <span class="built_in">npm</span> install element-ui</span><br><span class="line">复制表单源码</span><br><span class="line">安装axios   <span class="built_in">npm</span> i axios</span><br></pre></td></tr></table></figure>
+<h3 id="3-封装axios扩展为vue插件"><a href="#3-封装axios扩展为vue插件" class="headerlink" title="3.封装axios扩展为vue插件"></a>3.封装axios扩展为vue插件</h3><p>axios文档地址： <a href="https://github.com/axios/axios" target="_blank" rel="noopener">https://github.com/axios/axios</a><br>vue文档地址： <a href="https://cn.vuejs.org/v2/guide/plugins.html#开发插件" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/plugins.html#开发插件</a></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span></span><br><span class="line"><span class="keyword">import</span> &#123; getToken &#125; <span class="keyword">from</span> <span class="string">'@/assets/js/auth'</span></span><br><span class="line"><span class="keyword">const</span> http = axios.create(&#123;</span><br><span class="line">  baseURL: <span class="string">'http://localhost:8888/api/private/v1'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// vue插件</span></span><br><span class="line"><span class="comment">// https://cn.vuejs.org/v2/guide/plugins.html#开发插件</span></span><br><span class="line"><span class="keyword">const</span> httpPlugin = &#123;&#125;</span><br><span class="line">httpPlugin.install = <span class="function"><span class="keyword">function</span> (<span class="params">Vue, options</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 4. 添加实例方法</span></span><br><span class="line">  Vue.prototype.$http = http</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> httpPlugin</span><br><span class="line"><span class="comment">// 5 在main.js加载</span></span><br><span class="line"><span class="comment">// vue.use(httpPlugin)</span></span><br></pre></td></tr></table></figure>
+<p>在全局组件中调用$http来发起请求<br>例如</p>
+<p><img src="../images/http.png" alt=""></p>
+<h3 id="请求拦截器"><a href="#请求拦截器" class="headerlink" title="请求拦截器"></a>请求拦截器</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://github.com/axios/axios</span></span><br><span class="line"><span class="comment">// axios 配置请求拦截器</span></span><br><span class="line">http.interceptors.request.use(<span class="function"><span class="keyword">function</span> (<span class="params">config</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Do something before request is sent</span></span><br><span class="line">  <span class="keyword">if</span> (config.url != <span class="string">'/login'</span>) &#123;</span><br><span class="line">    config.headers[<span class="string">'Authorization'</span>] = getToken()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> config;</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Do something with request error</span></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="响应拦截器"><a href="#响应拦截器" class="headerlink" title="响应拦截器"></a>响应拦截器</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// axios 配置响应拦截器</span></span><br><span class="line"><span class="comment">// Add a response interceptor</span></span><br><span class="line">axios.interceptors.response.use(<span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Do something with response data</span></span><br><span class="line">  <span class="keyword">const</span> &#123; meta &#125; = response.data</span><br><span class="line">  <span class="keyword">if</span> (meta.status === <span class="number">403</span>) &#123;</span><br><span class="line">    <span class="built_in">window</span>.alert(<span class="string">'你没有权限执行该操作！'</span>)</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (meta.status === <span class="number">401</span>) &#123;</span><br><span class="line">    <span class="comment">// 401 token 失效 跳转到登录组件</span></span><br><span class="line">    router.push(&#123;</span><br><span class="line">      name: <span class="string">' login'</span>,</span><br><span class="line">      query: &#123;</span><br><span class="line">        redirect: <span class="built_in">window</span>.location.hash</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> response;</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Do something with response error</span></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+        </section>
+    </article>
+    
+        <!-- disqus 评论框 start -->
+        <div class="comment">
+            <div id="disqus_thread" class="disqus-thread">
+              <i>Loading comments box needs to over the wall</i>
+            </div>
+        </div>
+        <!-- disqus 评论框 end -->
+    
+        
+  </div>
+  <aside>
+    
+    <div class="toc-container">
+        <h1>目录</h1>
+        <div class="content">
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-安装vue-cli，基于webpack模版"><span class="toc-number">1.</span> <span class="toc-text">1.安装vue cli，基于webpack模版</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-导入ElementUI"><span class="toc-number">2.</span> <span class="toc-text">2.导入ElementUI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-封装axios扩展为vue插件"><span class="toc-number">3.</span> <span class="toc-text">3.封装axios扩展为vue插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求拦截器"><span class="toc-number">4.</span> <span class="toc-text">请求拦截器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#响应拦截器"><span class="toc-number">5.</span> <span class="toc-text">响应拦截器</span></a></li></ol>
+        </div>
+    </div>
+    
+  </aside>
+</main>
+
+<!-- disqus 公共JS代码 -->
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = "lewis-blog";
+  var disqus_identifier = "https://zhaotbj.github.io/2018/06/24/从零开始搭建vue项目 请求拦截器 响应拦截器/";
+  var disqus_url = "https://zhaotbj.github.io/2018/06/24/从零开始搭建vue项目 请求拦截器 响应拦截器/";
+
+  isAgent(getDisqus)
+
+  // determine user agent in China
+  function isAgent(cb) {
+    var url = '//graph.facebook.com/feed?callback=h';
+    var xhr = new XMLHttpRequest();
+    var called = false;
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+      called = true;
+      cb(true);
+      }
+    };
+    xhr.send();
+    // timeout 1s, this facebook API is very fast.
+    setTimeout(function() {
+      if (!called) {
+      xhr.abort();
+      cb(false)
+      }
+    }, 1000);
+  }
+
+  function getDisqus(isAgent) {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; 
+    dsq.async = true
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq)
+  }
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+  <footer>
+  <div class="copyright">
+    <div>
+      &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>&nbsp
+    </div>
+    <div>
+      Theme by <a href="https://github.com/lewis-geek/hexo-theme-Aath" target="_blank">Aath</a>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="/lib/in-view.min.js"></script>
+<script src="/lib/lodash.min.js"></script>
+<script>
+  var isDown = true
+  var oldY = 0
+  inView.offset(50)
+
+  document.body.addEventListener('touchstart', function(){});
+  
+  window.addEventListener('scroll', _.throttle(e => {
+    var currentY = window.scrollY
+    if((oldY - currentY) < 0) {
+      isDown = true
+    } else {
+      isDown = false
+    }
+    oldY = currentY
+  }, 250))
+
+  $("article img").each(function() {
+      var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+      $(this).wrapAll(strA);
+  });
+
+  $('.toc-link').each(function() {
+      var href = $(this).attr("href");
+      
+      inView(href).on('exit', () => {
+        if (isDown) {
+          handleActive(href)
+        }
+      })
+
+      inView(href).on('enter', () => {
+        if (!isDown) {
+          handleActive(href)
+        }
+      })
+
+      this.onclick = function(e) {
+        var pos = $(href).offset().top - 10;
+        $("html,body").animate({scrollTop: pos}, 300);
+        setTimeout(() => {
+          handleActive(href)
+        }, 350)
+        return false
+      }
+  })
+
+  function handleActive(href) {
+    document.querySelectorAll('.toc-link').forEach(elm => {
+      elm.classList.remove('active')
+    })
+    document.querySelector(".toc [href='"+ href +"']").classList.add('active')
+  }
+</script>
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+</body>
+</html>
