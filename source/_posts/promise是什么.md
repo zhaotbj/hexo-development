@@ -4,6 +4,7 @@ tags:
 
 ---
 ## promise
+
 > promise是什么
 
 官网解释 promise 表示一个异步操作的最终结果。

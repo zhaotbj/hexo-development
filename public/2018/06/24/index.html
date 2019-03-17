@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang=>
-  <head>
+  <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+  <meta name="description" content>
+  <meta name="keywords" content>
   
     <link rel="icon" href="/favicon.ico">
   
     
-  <title>从零开始搭建vue项目 请求拦截器 响应拦截器 | tian的博客</title>
+  <title>从零开始搭建vue项目 请求拦截器 响应拦截器 | 博客</title>
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -19,8 +19,8 @@
 <body>
   <header>
   <div class="header-container">
-    <a class='logo' href="/">
-      <span>tian的博客</span>
+    <a class="logo" href="/">
+      <span>博客</span>
     </a>
     <ul class="right-header">
       
@@ -52,12 +52,12 @@
   </div>
 </header>
 
-  <main id='post'>
+  <main id="post">
   <div class="content">
     <article>
         <section class="content markdown-body">
           <h1>从零开始搭建vue项目 请求拦截器 响应拦截器</h1>
-          <div class='post-meta'>
+          <div class="post-meta">
             <i class="fa fa-calendar" aria-hidden="true"></i> <time>2018/06/24</time>
             
             
@@ -69,7 +69,7 @@
 <h3 id="3-封装axios扩展为vue插件"><a href="#3-封装axios扩展为vue插件" class="headerlink" title="3.封装axios扩展为vue插件"></a>3.封装axios扩展为vue插件</h3><p>axios文档地址： <a href="https://github.com/axios/axios" target="_blank" rel="noopener">https://github.com/axios/axios</a><br>vue文档地址： <a href="https://cn.vuejs.org/v2/guide/plugins.html#开发插件" target="_blank" rel="noopener">https://cn.vuejs.org/v2/guide/plugins.html#开发插件</a></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span></span><br><span class="line"><span class="keyword">import</span> &#123; getToken &#125; <span class="keyword">from</span> <span class="string">'@/assets/js/auth'</span></span><br><span class="line"><span class="keyword">const</span> http = axios.create(&#123;</span><br><span class="line">  baseURL: <span class="string">'http://localhost:8888/api/private/v1'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// vue插件</span></span><br><span class="line"><span class="comment">// https://cn.vuejs.org/v2/guide/plugins.html#开发插件</span></span><br><span class="line"><span class="keyword">const</span> httpPlugin = &#123;&#125;</span><br><span class="line">httpPlugin.install = <span class="function"><span class="keyword">function</span> (<span class="params">Vue, options</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 4. 添加实例方法</span></span><br><span class="line">  Vue.prototype.$http = http</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> httpPlugin</span><br><span class="line"><span class="comment">// 5 在main.js加载</span></span><br><span class="line"><span class="comment">// vue.use(httpPlugin)</span></span><br></pre></td></tr></table></figure>
 <p>在全局组件中调用$http来发起请求<br>例如</p>
-<p><img src="../images/http.png" alt=""></p>
+<p><img src="../images/http.png" alt></p>
 <h3 id="请求拦截器"><a href="#请求拦截器" class="headerlink" title="请求拦截器"></a>请求拦截器</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://github.com/axios/axios</span></span><br><span class="line"><span class="comment">// axios 配置请求拦截器</span></span><br><span class="line">http.interceptors.request.use(<span class="function"><span class="keyword">function</span> (<span class="params">config</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Do something before request is sent</span></span><br><span class="line">  <span class="keyword">if</span> (config.url != <span class="string">'/login'</span>) &#123;</span><br><span class="line">    config.headers[<span class="string">'Authorization'</span>] = getToken()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> config;</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Do something with request error</span></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <h3 id="响应拦截器"><a href="#响应拦截器" class="headerlink" title="响应拦截器"></a>响应拦截器</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// axios 配置响应拦截器</span></span><br><span class="line"><span class="comment">// Add a response interceptor</span></span><br><span class="line">axios.interceptors.response.use(<span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Do something with response data</span></span><br><span class="line">  <span class="keyword">const</span> &#123; meta &#125; = response.data</span><br><span class="line">  <span class="keyword">if</span> (meta.status === <span class="number">403</span>) &#123;</span><br><span class="line">    <span class="built_in">window</span>.alert(<span class="string">'你没有权限执行该操作！'</span>)</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (meta.status === <span class="number">401</span>) &#123;</span><br><span class="line">    <span class="comment">// 401 token 失效 跳转到登录组件</span></span><br><span class="line">    router.push(&#123;</span><br><span class="line">      name: <span class="string">' login'</span>,</span><br><span class="line">      query: &#123;</span><br><span class="line">        redirect: <span class="built_in">window</span>.location.hash</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> response;</span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Do something with response error</span></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Promise</span>.reject(error);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
@@ -143,7 +143,7 @@
   <footer>
   <div class="copyright">
     <div>
-      &copy; 2018 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>&nbsp
+      &copy; 2019 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>&nbsp
     </div>
     <div>
       Theme by <a href="https://github.com/lewis-geek/hexo-theme-Aath" target="_blank">Aath</a>
