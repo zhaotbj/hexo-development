@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang=>
+  <head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="description" content>
+  <meta name="keywords" content>
+  
+    <link rel="icon" href="/favicon.ico">
+  
+    
+  <title>博客</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/lib/jquery.fancybox.min.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<body>
+  <header>
+  <div class="header-container">
+    <a class="logo" href="/">
+      <span>博客</span>
+    </a>
+    <ul class="right-header">
+      
+        <li class="nav-item">
+          
+            <a href="/" class="item-link">首页</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/about" class="item-link">关于</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/archives" class="item-link">归档</a>
+          
+        </li>
+      
+        <li class="nav-item">
+          
+            <a href="/tags" class="item-link">标签</a>
+          
+        </li>
+      
+    </ul>
+  </div>
+</header>
+
+  <main id="post">
+  <div class="content">
+    <article>
+        <section class="content markdown-body">
+          <h1>Untitled</h1>
+          <div class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> <time>2019/03/19</time>
+            
+            
+          </div>
+          <p>最近一直在学习node.js，所以总结了一些笔记，记录在这里。</p>
+<ul>
+<li>模块化和作用域</li>
+<li>node中常用到的模块</li>
+<li>ffer</li>
+<li>File </li>
+<li>Http</li>
+<li>stream<h2 id="模块化和作用域"><a href="#模块化和作用域" class="headerlink" title="模块化和作用域"></a>模块化和作用域</h2></li>
+</ul>
+<h3 id="this"><a href="#this" class="headerlink" title="this"></a>this</h3><p>浏览器中的this指的是window<br>node脚本文件中未定义时全局的this指向global ，定义时指的是module.exports<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a = <span class="number">10</span></span><br><span class="line"><span class="built_in">console</span>.log(global.a) <span class="comment">// 10</span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>全局作用域</li>
+</ul>
+<p>没用用var let const 定义的声明的都是全局作用域</p>
+<ul>
+<li>模块作用域</li>
+</ul>
+<p>使用变量修饰的都是模块作用域 </p>
+<ul>
+<li>函数作用域</li>
+<li>块级作用域</li>
+</ul>
+<h3 id="Buffer"><a href="#Buffer" class="headerlink" title="Buffer"></a>Buffer</h3><p>处理二进制数据<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 数组拼接buffer</span></span><br><span class="line"><span class="keyword">var</span> rs = <span class="built_in">require</span>(<span class="string">'fs'</span>).createReadStream(<span class="string">'test.txt'</span>, &#123; <span class="attr">highWaterMark</span>: <span class="number">10</span> &#125;)</span><br><span class="line"><span class="keyword">var</span> data = []</span><br><span class="line">rs.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">chunk</span>) </span>&#123;</span><br><span class="line">  data.push(chunk)</span><br><span class="line">&#125;)</span><br><span class="line">rs.on(<span class="string">'end'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">chunk</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> buf = Buffer.concat(data)</span><br><span class="line">  <span class="built_in">console</span>.log(buf.toString())</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="File-System"><a href="#File-System" class="headerlink" title="File System"></a>File System</h3><ul>
+<li>readFile </li>
+</ul>
+<p>用来异步读取文本文件中的内容，会将一个文件的全部内容都读到内存中，适用于体积较小的文本文件；<br>读取大文件，使用stream， readFileSync直接返回文本数据内容</p>
+<ul>
+<li>readFile 第一个参数是文件名，如果没有回自动创建。</li>
+<li>fs.stat 获取文件的状态<br>通常开发者可以在调用open() read() 或者write方法之前调用fs.stat方法，用来判断该文件是否存在。<br>fs.stat 和fs.fstat功能是一样的，</li>
+</ul>
+<p>区别是 fstat方法第一个参数是文件描述符，格式为integer，fstat方法通常搭配open方法使用，因为open方法返回的结果就是一个文件描述。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> fs= <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">var</span> data = fs.readFileSync(<span class="string">'test.txt'</span>, &#123;<span class="attr">encoding</span>: <span class="string">'utf-8'</span>&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(data)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fs.writeFile(<span class="string">'foo.txt'</span>, <span class="string">"hello world"</span>, &#123;<span class="attr">flag</span>: <span class="string">'a'</span>, <span class="attr">encoding</span>: <span class="string">'utf-8'</span>&#125;,</span><br><span class="line"><span class="function"><span class="keyword">function</span> (<span class="params">err</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125; </span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'success'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>fs.stat<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 用来获取文件的状态 来判断文件是否存在</span></span><br><span class="line"><span class="comment">// 常在调用open read witer是调用</span></span><br><span class="line">fs.stat(<span class="string">"foo.txt"</span>, <span class="function"><span class="keyword">function</span>(<span class="params">err, result</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(result)</span><br><span class="line">&#125;) </span><br><span class="line"></span><br><span class="line"><span class="comment">// fs.fstat</span></span><br><span class="line"></span><br><span class="line">fs.open(<span class="string">"foo.txt"</span>,<span class="string">'a'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">err,fd</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(err)&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(err);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(fd);</span><br><span class="line">    fs.fstat(fd,<span class="function"><span class="keyword">function</span>(<span class="params">err,result</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(err)&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(err);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(result);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 例子</span></span><br><span class="line"><span class="comment">// 获取目录下的说有文件名。</span></span><br><span class="line"><span class="comment">// fs.readdir 和fs.stat两个api</span></span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getAllFileFromPath</span>(<span class="params">path</span>) </span>&#123;</span><br><span class="line">    fs.readdir(path, <span class="function"><span class="keyword">function</span> (<span class="params">err, res</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">var</span> subPath <span class="keyword">of</span> res) &#123;</span><br><span class="line">            <span class="keyword">var</span> statObj = fs.statSync(path + <span class="string">"/"</span> + subPath); <span class="comment">//这里使用了同步方法而非异步</span></span><br><span class="line">            <span class="keyword">if</span> (statObj.isDirectory()) &#123;<span class="comment">//判断是否为文件夹</span></span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"Dir:"</span>, subPath);</span><br><span class="line">                getAllFileFromPath(path + <span class="string">"/"</span> + subPath)<span class="comment">//如果是文件夹，递归获取子文件夹中的文件列表</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="built_in">console</span>.log(<span class="string">"File:"</span>, subPath);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line">getAllFileFromPath(__dirname);</span><br></pre></td></tr></table></figure>
+<h3 id="http"><a href="#http" class="headerlink" title="http"></a>http</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>)</span><br><span class="line"><span class="keyword">var</span> server =http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 处理http请求</span></span><br><span class="line"><span class="keyword">var</span> method = req.method</span><br><span class="line"><span class="keyword">var</span> url = req.url</span><br><span class="line"><span class="built_in">console</span>.log(method, url)</span><br><span class="line">  res.writeHead(<span class="number">200</span>, &#123;<span class="string">'content-type'</span>: <span class="string">'text/plain'</span>&#125;)</span><br><span class="line">  res.end(<span class="string">'hello  node!'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">// 监听来自客户端的事件</span></span><br><span class="line">server.on(<span class="string">'connection'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'connection'</span>)</span><br><span class="line">&#125;)</span><br><span class="line">server.on(<span class="string">'request'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'request'</span>)</span><br><span class="line">&#125;)</span><br><span class="line">server.listen(<span class="number">8080</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 当访问8080时，控制台输出 </span></span><br><span class="line"><span class="comment">// connected</span></span><br><span class="line"><span class="comment">// request</span></span><br><span class="line"><span class="comment">// request 打印两次是因为其中一个是favicon.ico的请求</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 一个简单的静态服务器</span></span><br><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>)</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">var</span> server = http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (req.url == <span class="string">'/'</span>) &#123; <span class="comment">//访问8080</span></span><br><span class="line">    <span class="keyword">var</span> fileList = fs.readdirSync(<span class="string">'./'</span>)</span><br><span class="line">    res.writeHead(<span class="number">200</span>, &#123; <span class="string">'content-type'</span>: <span class="string">'text/plain'</span> &#125;)</span><br><span class="line">    <span class="comment">// 将数组转化为字符串返回</span></span><br><span class="line">    res.end(fileList.toString())</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> path = req.url;</span><br><span class="line">    <span class="comment">// 在路径字符串前加.表示当前目录，避免在nix系统访问/文件夹</span></span><br><span class="line">    fs.readFile(<span class="string">'.'</span> + path, <span class="function"><span class="keyword">function</span> (<span class="params">err, data</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">if</span> (err) &#123;</span><br><span class="line">        res.end(<span class="string">'不存在'</span>)</span><br><span class="line">        <span class="keyword">throw</span> err;</span><br><span class="line">      &#125;</span><br><span class="line">      res.writeHead(<span class="number">200</span>, &#123; <span class="string">'content-type'</span>: <span class="string">'text/plain'</span> &#125;)</span><br><span class="line">      res.end(data)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"><span class="comment">//1buffer.js,2http.js,3httpexmple.js,4.js,foo.txt,login.html,md.md,readFile.js,test.txt,this.js,upload.js</span></span><br><span class="line">server.listen(<span class="number">8080</span>)</span><br><span class="line"><span class="comment">// 处理异常</span></span><br><span class="line">process.on(<span class="string">'uncaughtException'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'got error'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="处理http请求"><a href="#处理http请求" class="headerlink" title="处理http请求"></a>处理http请求</h4><ul>
+<li>method url header</li>
+</ul>
+<p>get post put delete update<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">// 处理http请求</span></span><br><span class="line"><span class="keyword">var</span> method = req.method</span><br><span class="line"><span class="keyword">var</span> url = req.url</span><br></pre></td></tr></table></figure></p>
+<h4 id="Response-对象"><a href="#Response-对象" class="headerlink" title="Response 对象"></a>Response 对象</h4><h4 id="上传数据"><a href="#上传数据" class="headerlink" title="上传数据"></a>上传数据</h4><ul>
+<li><p>upload.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">  <span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"/upload"</span> <span class="attr">method</span>=<span class="string">"post"</span> <span class="attr">enctype</span>=<span class="string">"multipart/form-data"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">name</span>=<span class="string">"file"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"kind"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">name</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"submit"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>js</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// npm 安装依赖  formidable </span></span><br><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>)</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">var</span> formidable = <span class="built_in">require</span>(<span class="string">"formidable"</span>);</span><br><span class="line"><span class="keyword">var</span> server = http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (req.url == <span class="string">'/upload'</span>) &#123;</span><br><span class="line">    <span class="keyword">switch</span> (req.method) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">'GET'</span>:</span><br><span class="line">        fs.createReadStream(<span class="string">'upload.html'</span>).pipe(res)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      <span class="keyword">case</span> <span class="string">'POST'</span>:</span><br><span class="line">        dealpost(req, res) <span class="comment">// 自定义方法处理</span></span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'other request'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    res.writeHead(<span class="number">302</span>, &#123;</span><br><span class="line">      <span class="string">'Location'</span>: <span class="string">'./upload'</span></span><br><span class="line">    &#125;)</span><br><span class="line">    res.end() <span class="comment">// 将所有的url访问都转到/login路径</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dealpost</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> form = <span class="keyword">new</span> formidable.IncomingForm();</span><br><span class="line">  form.keepExtensions = <span class="literal">true</span></span><br><span class="line">  form.uploadDir = __dirname</span><br><span class="line">  form.parse(req, <span class="function"><span class="keyword">function</span>(<span class="params">err, fields, files</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(err) &#123;</span><br><span class="line">      <span class="keyword">throw</span> err</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">console</span>.log(fields)</span><br><span class="line">    <span class="built_in">console</span>.log(files)</span><br><span class="line">    res.writeHead(<span class="number">200</span>, &#123;<span class="string">'content-type'</span>: <span class="string">'text/plain'</span>&#125;)</span><br><span class="line">    res.end(<span class="string">'upload finished'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">server.listen(<span class="number">8080</span>)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="stream"><a href="#stream" class="headerlink" title="stream"></a>stream</h3><p>stream 模块是node操作流失数据</p>
+<blockquote>
+<p>四种基础的stream类型</p>
+<ol>
+<li>readable 可读流</li>
+<li>writable 可写流</li>
+<li>duplex 即可读又可写的流</li>
+<li>transform 操作写入的数据，然后读取结果，通常用于数据数据和输出数据不要求匹配的场景，<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> stream =<span class="built_in">require</span>(<span class="string">'stream'</span>)</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">var</span> readStream = fs.createReadStream(<span class="string">"./text.txt"</span>, <span class="string">'utf-8'</span>)</span><br><span class="line">readStream.on(<span class="string">'data'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(data)</span><br><span class="line">&#125;)</span><br><span class="line">readStream.on(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'close'</span>)</span><br><span class="line">&#125;)</span><br><span class="line">readStream.on(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'error'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</blockquote>
+<p>当创建一个可读流读取一个较大的文件，在调用pipe方法将数据通过一个可写流写入另一个位置。如果读取的速度大于写入的速度，那么node将会在内存中缓存这些数据。</p>
+<p>pipe 方法相当于在可读流和可写流之间加起来的桥梁，是的数据可以通过管道由可读流进入可写流，</p>
+<ul>
+<li>使用pipe改写的静态文件服务器<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> stream = <span class="built_in">require</span>(<span class="string">'stream'</span>)</span><br><span class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>)</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">var</span> server = http.createServer(<span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (req.url == <span class="string">'/'</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> fileList = fs.readdirSync(<span class="string">'./'</span>)</span><br><span class="line">    res.writeHead(<span class="number">200</span>, &#123; <span class="string">'Content-type'</span>: <span class="string">'text/plain'</span> &#125;)</span><br><span class="line">    res.end(fileList.toString())</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> readStream = fs.createReadStream(path).pipe(res);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">      res.end(<span class="string">"file not exists"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line">server.listen(<span class="number">3000</span>)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">"Listening on 3000"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//处理异常</span></span><br><span class="line">process.on(<span class="string">"uncaughtException"</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">"got error"</span>);</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// pipe方法接收一个writable对象，当readable对象调用pipe方法时，会在内部调用writable对象的write方法进行写入。</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Events"><a href="#Events" class="headerlink" title="Events"></a>Events</h3><h5 id="事件和监听器"><a href="#事件和监听器" class="headerlink" title="事件和监听器"></a>事件和监听器</h5><p>eventsnode程序中的对象会产生一系类的事件，他们被称为事件触发器，</p>
+<p>所有能触发事件的对下你给都是eventEmitter类的实例。eventEmitter定义了on方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> eventEmitter = <span class="built_in">require</span>(<span class="string">"events"</span>);</span><br><span class="line"><span class="keyword">var</span> myEmitter = <span class="keyword">new</span> eventEmitter();</span><br><span class="line">myEmitter.on(<span class="string">"begin"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">"begin"</span>);</span><br><span class="line">&#125;)</span><br><span class="line">myEmitter.emit(<span class="string">"begin"</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="第五章"><a href="#第五章" class="headerlink" title="第五章"></a>第五章</h3><h4 id="中间件middleware"><a href="#中间件middleware" class="headerlink" title="中间件middleware"></a>中间件middleware</h4><ul>
+<li>1 中间价的概念</li>
+</ul>
+<p>express 本身是有路由和中间件构成的，从本质上来说，express的运行就是在不断调用这个中间件。</p>
+<p>中间件的本质上是接收请求并且做出相应动作的函数，该函数通常接收req和res作为参数，以便对request和response对象进行操作，在web应用中，客户端发起的每一个请求，首先要经过中间件的处理才能继续向下。</p>
+<p>中间件的第三个参数一般写作next,它代表一个方法，即下一个中间件。如果我们在中间件的方法体中调用了next方法，即表示请求会经过下一个中间件处理。</p>
+<ul>
+<li>2中间件的功能</li>
+</ul>
+<p>中间件是一个函数，可以做到node代码能做到的任何事情，除此之外还包括修改request和response对象、终结请求-响应循环，以及调用下一个中间件等功能，这通常是通过在内部调用next方法来实现的。如果某个中间件中没有调用next方法，则表示对请求的处理到此为止，下一个中间件不会被执行。</p>
+<ul>
+<li>中间件的加载</li>
+</ul>
+<p>中间件的加载使用use方法来实现，改方法定义在express或者koa对象的实例上，<br><figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="keyword">app</span> =express()</span><br><span class="line"><span class="keyword">app</span>.<span class="keyword">use</span>(md)</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>express中的中间件</li>
+</ul>
+<p>express应用可使用如下几种中间件</p>
+<ul>
+<li>应用级中间件</li>
+<li>路由级中间件</li>
+<li>错误处理中间件</li>
+<li>内置中间件</li>
+<li>第三方中间件<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">应用级中间件  使用<span class="keyword">app</span>.<span class="keyword">use</span>方法，绑定在<span class="keyword">app</span>对象上的中间件</span><br><span class="line">路由级中间件 路由处理是express的一部分，koa是通过第三方 koa-router</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+        </section>
+    </article>
+    
+        <!-- disqus 评论框 start -->
+        <div class="comment">
+            <div id="disqus_thread" class="disqus-thread">
+              <i>Loading comments box needs to over the wall</i>
+            </div>
+        </div>
+        <!-- disqus 评论框 end -->
+    
+        
+  </div>
+  <aside>
+    
+    <div class="toc-container">
+        <h1>目录</h1>
+        <div class="content">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#模块化和作用域"><span class="toc-number">1.</span> <span class="toc-text">模块化和作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#this"><span class="toc-number">1.1.</span> <span class="toc-text">this</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Buffer"><span class="toc-number">1.2.</span> <span class="toc-text">Buffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#File-System"><span class="toc-number">1.3.</span> <span class="toc-text">File System</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#http"><span class="toc-number">1.4.</span> <span class="toc-text">http</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#处理http请求"><span class="toc-number">1.4.1.</span> <span class="toc-text">处理http请求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Response-对象"><span class="toc-number">1.4.2.</span> <span class="toc-text">Response 对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#上传数据"><span class="toc-number">1.4.3.</span> <span class="toc-text">上传数据</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stream"><span class="toc-number">1.5.</span> <span class="toc-text">stream</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Events"><span class="toc-number">1.6.</span> <span class="toc-text">Events</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#事件和监听器"><span class="toc-number">1.6.0.1.</span> <span class="toc-text">事件和监听器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第五章"><span class="toc-number">1.7.</span> <span class="toc-text">第五章</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#中间件middleware"><span class="toc-number">1.7.1.</span> <span class="toc-text">中间件middleware</span></a></li></ol></li></ol>
+        </div>
+    </div>
+    
+  </aside>
+</main>
+
+<!-- disqus 公共JS代码 -->
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES * * */
+  var disqus_shortname = "lewis-blog";
+  var disqus_identifier = "https://zhaotbj.github.io/2019/03/19/";
+  var disqus_url = "https://zhaotbj.github.io/2019/03/19/";
+
+  isAgent(getDisqus)
+
+  // determine user agent in China
+  function isAgent(cb) {
+    var url = '//graph.facebook.com/feed?callback=h';
+    var xhr = new XMLHttpRequest();
+    var called = false;
+    xhr.open('GET', url);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+      called = true;
+      cb(true);
+      }
+    };
+    xhr.send();
+    // timeout 1s, this facebook API is very fast.
+    setTimeout(function() {
+      if (!called) {
+      xhr.abort();
+      cb(false)
+      }
+    }, 1000);
+  }
+
+  function getDisqus(isAgent) {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; 
+    dsq.async = true
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq)
+  }
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+  <footer>
+  <div class="copyright">
+    <div>
+      &copy; 2019 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a>&nbsp
+    </div>
+    <div>
+      Theme by <a href="https://github.com/lewis-geek/hexo-theme-Aath" target="_blank">Aath</a>
+    </div>
+  </div>
+</footer>
+
+
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="/lib/in-view.min.js"></script>
+<script src="/lib/lodash.min.js"></script>
+<script>
+  var isDown = true
+  var oldY = 0
+  inView.offset(50)
+
+  document.body.addEventListener('touchstart', function(){});
+  
+  window.addEventListener('scroll', _.throttle(e => {
+    var currentY = window.scrollY
+    if((oldY - currentY) < 0) {
+      isDown = true
+    } else {
+      isDown = false
+    }
+    oldY = currentY
+  }, 250))
+
+  $("article img").each(function() {
+      var strA = "<a data-fancybox='gallery' href='" + this.src + "'></a>";
+      $(this).wrapAll(strA);
+  });
+
+  $('.toc-link').each(function() {
+      var href = $(this).attr("href");
+      
+      inView(href).on('exit', () => {
+        if (isDown) {
+          handleActive(href)
+        }
+      })
+
+      inView(href).on('enter', () => {
+        if (!isDown) {
+          handleActive(href)
+        }
+      })
+
+      this.onclick = function(e) {
+        var pos = $(href).offset().top - 10;
+        $("html,body").animate({scrollTop: pos}, 300);
+        setTimeout(() => {
+          handleActive(href)
+        }, 350)
+        return false
+      }
+  })
+
+  function handleActive(href) {
+    document.querySelectorAll('.toc-link').forEach(elm => {
+      elm.classList.remove('active')
+    })
+    document.querySelector(".toc [href='"+ href +"']").classList.add('active')
+  }
+</script>
+<script src="/lib/jquery.fancybox.min.js"></script>
+
+
+</body>
+</html>
